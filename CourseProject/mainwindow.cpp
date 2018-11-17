@@ -1,13 +1,29 @@
 #include <Windows.h>
 #include <map>
 
+#define FILE_MENU_OPEN 1
+#define FILE_MENU_EXIT 2
+
 LONG CALLBACK WinEvents(HWND, UINT, WPARAM, LPARAM);
 
-typedef void(*event)();
+typedef void(*event)(HWND, WPARAM);
+typedef void(*simpleEvent)(HWND);
 
-void Quit();
+void Quit(HWND, WPARAM);
+void CommandEvents(HWND, WPARAM);
+void InitWindow(HWND, WPARAM);
+void AddMenus(HWND);
+void SelectFile(HWND);
+void MenuExit(HWND);
 
-std::map<UINT, event> events = { {WM_DESTROY, Quit} };
+std::map<UINT, event> events = { {WM_DESTROY, Quit},
+								 {WM_CREATE, InitWindow},
+								 {WM_COMMAND, CommandEvents} };
+
+std::map<UINT, simpleEvent> simpleEvents = { {FILE_MENU_OPEN, SelectFile},
+											 {FILE_MENU_EXIT, MenuExit} };
+
+HMENU hMenu;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine, int nShowCmd)
@@ -20,7 +36,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	wClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wClass.hInstance = hInstance;
-	wClass.lpszClassName = "window228";
+	wClass.lpszClassName = "myWindow";
 	wClass.lpfnWndProc = WinEvents;
 	wClass.cbWndExtra = 0;
 	wClass.cbClsExtra = 0;
@@ -31,8 +47,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		return -1;
 	}
 
-	hwnd = CreateWindow("window228", "Properties", WS_OVERLAPPEDWINDOW, 30, 30, 
-		200, 450, HWND_DESKTOP, NULL, hInstance, NULL);
+	hwnd = CreateWindow("myWindow", "Properties", WS_OVERLAPPEDWINDOW, 30, 30, 
+		400, 450, HWND_DESKTOP, NULL, hInstance, NULL);
 	ShowWindow(hwnd, nShowCmd);
 	UpdateWindow(hwnd);
 
@@ -49,7 +65,7 @@ LONG CALLBACK WinEvents(HWND hwnd, UINT winEvent, WPARAM wParam, LPARAM lParam)
 {
 	if (events.find(winEvent) != events.end())
 	{
-		events[winEvent]();
+		events[winEvent](hwnd, wParam);
 	}
 	else
 	{
@@ -58,7 +74,60 @@ LONG CALLBACK WinEvents(HWND hwnd, UINT winEvent, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void Quit()
+void InitWindow(HWND hWnd, WPARAM wParam)
+{
+	AddMenus(hWnd);
+}
+
+void CommandEvents(HWND hWnd, WPARAM wParam)
+{
+	UINT eventCode = LOWORD(wParam);
+	if (simpleEvents.find(eventCode) != simpleEvents.end())
+	{
+		simpleEvents[eventCode](hWnd);
+	}
+}
+
+void AddMenus(HWND hWnd)
+{
+	hMenu = CreateMenu();
+	HMENU hFileMenu = CreateMenu();
+	AppendMenu(hFileMenu, MF_STRING, FILE_MENU_OPEN, "Open");
+	AppendMenu(hFileMenu, MF_SEPARATOR, NULL, NULL);
+	AppendMenu(hFileMenu, MF_STRING, FILE_MENU_EXIT, "Exit");
+
+	AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hFileMenu, "File");
+	AppendMenu(hMenu, MF_STRING, NULL, "Help");
+	SetMenu(hWnd, hMenu);
+}
+
+void SelectFile(HWND hWnd)
+{
+	OPENFILENAME ofn;
+	char szFile[260];
+	HANDLE hf;
+
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hWnd;
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	GetOpenFileName(&ofn);
+}
+
+void MenuExit(HWND hWnd)
+{
+	DestroyWindow(hWnd);
+}
+
+void Quit(HWND hWnd, WPARAM wParam)
 {
 	PostQuitMessage(0);
 }
