@@ -26,7 +26,7 @@ std::map<UINT, simpleEvent> simpleEvents = { {FILE_MENU_OPEN, SelectFile},
 											 {FILE_MENU_EXIT, MenuExit} };
 
 HMENU hMenu;
-
+/*
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine, int nShowCmd)
 {
@@ -61,7 +61,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	}
 
 	return msg.wParam;
-}
+}*/
 
 LONG CALLBACK WinEvents(HWND hwnd, UINT winEvent, WPARAM wParam, LPARAM lParam)
 {
