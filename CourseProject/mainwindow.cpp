@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <map>
+#include <string>
 
 #define FILE_MENU_OPEN 1
 #define FILE_MENU_EXIT 2
@@ -13,6 +14,7 @@ void Quit(HWND, WPARAM);
 void CommandEvents(HWND, WPARAM);
 void InitWindow(HWND, WPARAM);
 void AddMenus(HWND);
+void AddLabels(HWND);
 void SelectFile(HWND);
 void MenuExit(HWND);
 
@@ -74,9 +76,14 @@ LONG CALLBACK WinEvents(HWND hwnd, UINT winEvent, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+/*
+	IMPLEMENTATION
+*/
+
 void InitWindow(HWND hWnd, WPARAM wParam)
 {
 	AddMenus(hWnd);
+	AddLabels(hWnd);
 }
 
 void CommandEvents(HWND hWnd, WPARAM wParam)
@@ -92,13 +99,31 @@ void AddMenus(HWND hWnd)
 {
 	hMenu = CreateMenu();
 	HMENU hFileMenu = CreateMenu();
-	AppendMenu(hFileMenu, MF_STRING, FILE_MENU_OPEN, "Open");
+	AppendMenu(hFileMenu, MF_STRING, FILE_MENU_OPEN, "Открыть");
 	AppendMenu(hFileMenu, MF_SEPARATOR, NULL, NULL);
-	AppendMenu(hFileMenu, MF_STRING, FILE_MENU_EXIT, "Exit");
+	AppendMenu(hFileMenu, MF_STRING, FILE_MENU_EXIT, "Выход");
 
-	AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hFileMenu, "File");
-	AppendMenu(hMenu, MF_STRING, NULL, "Help");
+	AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hFileMenu, "Файл");
+	AppendMenu(hMenu, MF_STRING, NULL, "Помощь");
 	SetMenu(hWnd, hMenu);
+}
+
+void AddLabels(HWND hWnd)
+{
+	HWND label = CreateWindow("static", "Создан: ", WS_VISIBLE | WS_CHILD, 10, 10, 380, 
+		20, hWnd, NULL, NULL, NULL);
+	HWND label2 = CreateWindow("static", "Изменен: ", WS_VISIBLE | WS_CHILD, 10, 40, 380,
+		20, hWnd, NULL, NULL, NULL);
+	HWND label3 = CreateWindow("static", "Открыт: ", WS_VISIBLE | WS_CHILD, 10, 70, 380,
+		20, hWnd, NULL, NULL, NULL);
+	/*
+	LPSTR a = new char[260];
+	GetWindowText(label, a, 260);
+	std::string b = a;
+	std::string con = b + "яяя";
+	SetWindowText(label, (LPCSTR)con.c_str());
+	delete[] a;
+	*/
 }
 
 void SelectFile(HWND hWnd)
@@ -119,7 +144,11 @@ void SelectFile(HWND hWnd)
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-	GetOpenFileName(&ofn);
+
+	if (GetOpenFileName(&ofn))
+	{
+		MessageBox(NULL, ofn.lpstrFile, "File", MB_OK);
+	}
 }
 
 void MenuExit(HWND hWnd)
