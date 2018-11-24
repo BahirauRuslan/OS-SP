@@ -87,27 +87,29 @@ void Controller::selectFileData()
 {
 	std::string ofn = form.selectFile();
 	HANDLE file = FileUtil::getFileUtil()->getFileHandle(ofn);
-	viewCreatedDateTimeFile(file);
-	viewEditedDateTimeFile(file);
-	viewOpenedDateTimeFile(file);
+	BY_HANDLE_FILE_INFORMATION fileInf 
+		= FileUtil::getFileUtil()->getFileInformation(file);
+	viewCreatedDateTimeFile(fileInf);
+	viewEditedDateTimeFile(fileInf);
+	viewOpenedDateTimeFile(fileInf);
 }
 
 
-void Controller::viewCreatedDateTimeFile(HANDLE file)
+void Controller::viewCreatedDateTimeFile(BY_HANDLE_FILE_INFORMATION file)
 {
 	form.setToLabel(form.getCreatedDateTimeLabel(),
 		CREATED_DATETIME_LABEL + dateTimeManager.getCreatedDateTimeFile(file));
 }
 
 
-void Controller::viewEditedDateTimeFile(HANDLE file)
+void Controller::viewEditedDateTimeFile(BY_HANDLE_FILE_INFORMATION file)
 {
 	form.setToLabel(form.getEditedDateTimeLabel(),
 		EDITED_DATETIME_LABEL + dateTimeManager.getEditedDateTimeFile(file));
 }
 
 
-void Controller::viewOpenedDateTimeFile(HANDLE file)
+void Controller::viewOpenedDateTimeFile(BY_HANDLE_FILE_INFORMATION file)
 {
 	form.setToLabel(form.getOpenedDateTimeLabel(),
 		OPENED_DATETIME_LABEL + dateTimeManager.getOpenedDateTimeFile(file));

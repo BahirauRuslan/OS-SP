@@ -21,6 +21,14 @@ HANDLE FileUtil::getFileHandle(std::string fileName)
 }
 
 
+BY_HANDLE_FILE_INFORMATION FileUtil::getFileInformation(HANDLE file)
+{
+	BY_HANDLE_FILE_INFORMATION fileInformation;
+	GetFileInformationByHandle(file, &fileInformation);
+	return fileInformation;
+}
+
+
 FileUtil* FileUtil::getFileUtil()
 {
 	if (fileUtil == nullptr)

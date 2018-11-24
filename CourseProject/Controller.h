@@ -17,9 +17,9 @@ public:
 	void selectFileData();
 	void closeWindow();
 	void quit(WPARAM wParam);
-	void viewCreatedDateTimeFile(HANDLE file);
-	void viewEditedDateTimeFile(HANDLE file);
-	void viewOpenedDateTimeFile(HANDLE file);
+	void viewCreatedDateTimeFile(BY_HANDLE_FILE_INFORMATION file);
+	void viewEditedDateTimeFile(BY_HANDLE_FILE_INFORMATION file);
+	void viewOpenedDateTimeFile(BY_HANDLE_FILE_INFORMATION file);
 	MainForm getForm();
 	FileDateTimeManager getDateTimeManager();
 	void setForm(MainForm form);

@@ -11,37 +11,37 @@ FileDateTimeManager::~FileDateTimeManager()
 }
 
 
-std::string FileDateTimeManager::getCreatedDateTimeFile(HANDLE file)
+std::string FileDateTimeManager::getCreatedDateTimeFile(BY_HANDLE_FILE_INFORMATION file)
 {
-	FILETIME fCreatedTime;
 	SYSTEMTIME createdTime;
-	GetFileTime(file, &fCreatedTime, NULL, NULL);
-	FileTimeToSystemTime(&fCreatedTime, &createdTime);
-	return std::to_string(createdTime.wDay) + "." + std::to_string(createdTime.wMonth) +
-		 "." + std::to_string(createdTime.wYear) + " " + std::to_string(createdTime.wHour) + ":" +
-		std::to_string(createdTime.wMinute) + ":" + std::to_string(createdTime.wSecond);
+	FileTimeToLocalFileTime(&(file.ftCreationTime), &(file.ftCreationTime));
+	FileTimeToSystemTime(&(file.ftCreationTime), &createdTime);
+	char buff[260];
+	sprintf_s(buff, "%02d.%02d.%d %02d:%02d:%02d", createdTime.wDay, createdTime.wMonth, 
+		createdTime.wYear, createdTime.wHour, createdTime.wMinute, createdTime.wSecond);
+	return buff;
 }
 
 
-std::string FileDateTimeManager::getEditedDateTimeFile(HANDLE file)
+std::string FileDateTimeManager::getEditedDateTimeFile(BY_HANDLE_FILE_INFORMATION file)
 {
-	FILETIME fEditedTime;
 	SYSTEMTIME editedTime;
-	GetFileTime(file, NULL, &fEditedTime, NULL);
-	FileTimeToSystemTime(&fEditedTime, &editedTime);
-	return std::to_string(editedTime.wDay) + "." + std::to_string(editedTime.wMonth) +
-		"." + std::to_string(editedTime.wYear) + " " + std::to_string(editedTime.wHour) + ":" +
-		std::to_string(editedTime.wMinute) + ":" + std::to_string(editedTime.wSecond);
+	FileTimeToLocalFileTime(&(file.ftLastWriteTime), &(file.ftLastWriteTime));
+	FileTimeToSystemTime(&(file.ftLastWriteTime), &editedTime);
+	char buff[260];
+	sprintf_s(buff, "%02d.%02d.%d %02d:%02d:%02d", editedTime.wDay, editedTime.wMonth,
+		editedTime.wYear, editedTime.wHour, editedTime.wMinute, editedTime.wSecond);
+	return buff;
 }
 
 
-std::string FileDateTimeManager::getOpenedDateTimeFile(HANDLE file)
+std::string FileDateTimeManager::getOpenedDateTimeFile(BY_HANDLE_FILE_INFORMATION file)
 {
-	FILETIME fOpenedTime;
 	SYSTEMTIME openedTime;
-	GetFileTime(file, NULL, NULL, &fOpenedTime);
-	FileTimeToSystemTime(&fOpenedTime, &openedTime);
-	return std::to_string(openedTime.wDay) + "." + std::to_string(openedTime.wMonth) +
-		"." + std::to_string(openedTime.wYear) + " " + std::to_string(openedTime.wHour) + ":" +
-		std::to_string(openedTime.wMinute) + ":" + std::to_string(openedTime.wSecond);
+	FileTimeToLocalFileTime(&(file.ftLastAccessTime), &(file.ftLastAccessTime));
+	FileTimeToSystemTime(&(file.ftLastAccessTime), &openedTime);
+	char buff[260];
+	sprintf_s(buff, "%02d.%02d.%d %02d:%02d:%02d", openedTime.wDay, openedTime.wMonth,
+		openedTime.wYear, openedTime.wHour, openedTime.wMinute, openedTime.wSecond);
+	return buff;
 }
