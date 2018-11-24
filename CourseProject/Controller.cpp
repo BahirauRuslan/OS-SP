@@ -92,6 +92,8 @@ void Controller::selectFileData()
 	viewCreatedDateTimeFile(fileInf);
 	viewEditedDateTimeFile(fileInf);
 	viewOpenedDateTimeFile(fileInf);
+	viewFilePath(ofn);
+	viewFileSize(fileInf);
 }
 
 
@@ -116,6 +118,20 @@ void Controller::viewOpenedDateTimeFile(BY_HANDLE_FILE_INFORMATION file)
 }
 
 
+void Controller::viewFilePath(std::string path)
+{
+	form.setToLabel(form.getPathLabel(), PATH_LABEL + path);
+}
+
+
+void Controller::viewFileSize(BY_HANDLE_FILE_INFORMATION file)
+{
+	std::string sizeStr = std::to_string(fileSizeManager.getFileSize(file));
+	form.setToLabel(form.getFileSizeLabel(), FILE_SIZE_LABEL + sizeStr
+		+ FILE_SIZE_LABEL_SUFFIX);
+}
+
+
 MainForm Controller::getForm()
 {
 	return form;
@@ -128,6 +144,12 @@ FileDateTimeManager Controller::getDateTimeManager()
 }
 
 
+FileSizeManager Controller::getFileSizeManager()
+{
+	return fileSizeManager;
+}
+
+
 void Controller::setForm(MainForm form)
 {
 	this->form = form;
@@ -137,4 +159,10 @@ void Controller::setForm(MainForm form)
 void Controller::setDateTimeManager(FileDateTimeManager dateTimeManager)
 {
 	this->dateTimeManager = dateTimeManager;
+}
+
+
+void Controller::setFileSizeManager(FileSizeManager fileSizeManager)
+{
+	this->fileSizeManager = fileSizeManager;
 }

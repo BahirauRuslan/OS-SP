@@ -10,7 +10,7 @@
 #define TITLE "Атрибуты файла в NTFS"
 #define MAIN_X_POS 100
 #define MAIN_Y_POS 100
-#define MAIN_WIDTH 400
+#define MAIN_WIDTH 700
 #define MAIN_HEIGHT 450
 
 #define LABELS_WIDHT 380
@@ -19,9 +19,14 @@
 #define CREATED_DATETIME_LABEL "Создан: "
 #define EDITED_DATETIME_LABEL "Изменен: "
 #define OPENED_DATETIME_LABEL "Открыт: "
+#define PATH_LABEL "Путь: "
+#define FILE_SIZE_LABEL "Размер файла: "
+#define FILE_SIZE_LABEL_SUFFIX " байт"
 #define CREATED_DATETIME_LABEL_Y_POS TOP_Y_POS
 #define EDITED_DATETIME_LABEL_Y_POS CREATED_DATETIME_LABEL_Y_POS + LABELS_Y_LAYOUT
 #define OPENED_DATETIME_LABEL_Y_POS EDITED_DATETIME_LABEL_Y_POS + LABELS_Y_LAYOUT
+#define PATH_LABEL_Y_POS OPENED_DATETIME_LABEL_Y_POS + LABELS_Y_LAYOUT + DEFAULT_Y_LAYOUT
+#define FILE_SIZE_LABEL_Y_POS PATH_LABEL_Y_POS + LABELS_Y_LAYOUT
 
 #define HELP "Помощь"
 #define FILE_MENU "Файл"
@@ -52,12 +57,16 @@ public:
 	HWND getCreatedDateTimeLabel();
 	HWND getEditedDateTimeLabel();
 	HWND getOpenedDateTimeLabel();
+	HWND getPathLabel();
+	HWND getFileSizeLabel();
 	void setHWnd(HWND hWnd);
 	void setMainMenu(HMENU mainMenu);
 	void setFileMenu(HMENU fileMenu);
 	void setCreatedDateTimeLabel(HWND createdDateTimeLabel);
 	void setEditedDateTimeLabel(HWND editedDateTimeLabel);
 	void setOpenedDateTimeLabel(HWND openedDateTimeLabel);
+	void setPathLabel(HWND pathLabel);
+	void setFileSizeLabel(HWND fileSizeLabel);
 private:
 	HWND hWnd;
 	HMENU mainMenu;
@@ -65,5 +74,7 @@ private:
 	HWND createdDateTimeLabel;
 	HWND editedDateTimeLabel;
 	HWND openedDateTimeLabel;
+	HWND pathLabel;
+	HWND fileSizeLabel;
 };
 

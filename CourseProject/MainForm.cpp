@@ -84,6 +84,12 @@ void MainForm::addLabels()
 	openedDateTimeLabel = CreateWindow("static", OPENED_DATETIME_LABEL, 
 		WS_VISIBLE | WS_CHILD, DEFAULT_X_POS, OPENED_DATETIME_LABEL_Y_POS, 
 		LABELS_WIDHT, LABELS_HEIGHT, hWnd, NULL, NULL, NULL);
+	pathLabel = CreateWindow("static", PATH_LABEL,
+		WS_VISIBLE | WS_CHILD, DEFAULT_X_POS, PATH_LABEL_Y_POS,
+		LABELS_WIDHT, LABELS_HEIGHT, hWnd, NULL, NULL, NULL);
+	fileSizeLabel = CreateWindow("static", FILE_SIZE_LABEL,
+		WS_VISIBLE | WS_CHILD, DEFAULT_X_POS, FILE_SIZE_LABEL_Y_POS,
+		LABELS_WIDHT, LABELS_HEIGHT, hWnd, NULL, NULL, NULL);
 }
 
 std::string MainForm::getFromLabel(HWND label)
@@ -136,6 +142,18 @@ HWND MainForm::getOpenedDateTimeLabel()
 }
 
 
+HWND MainForm::getPathLabel()
+{
+	return pathLabel;
+}
+
+
+HWND MainForm::getFileSizeLabel()
+{
+	return fileSizeLabel;
+}
+
+
 void MainForm::setHWnd(HWND hWnd)
 {
 	this->hWnd = hWnd;
@@ -169,4 +187,16 @@ void MainForm::setEditedDateTimeLabel(HWND editedDateTimeLabel)
 void MainForm::setOpenedDateTimeLabel(HWND openedDateTimeLabel)
 {
 	this->openedDateTimeLabel = openedDateTimeLabel;
+}
+
+
+void MainForm::setPathLabel(HWND pathLabel)
+{
+	this->pathLabel = pathLabel;
+}
+
+
+void MainForm::setFileSizeLabel(HWND fileSizeLabel)
+{
+	this->fileSizeLabel = fileSizeLabel;
 }
