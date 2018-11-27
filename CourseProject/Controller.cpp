@@ -4,7 +4,9 @@ std::map<UINT, events> mainEventMap = { { WM_DESTROY, &Controller::quit },
 										{ WM_COMMAND, &Controller::commandEvents } };
 
 std::map<UINT, commEvents> commandEventMap = { { FILE_MENU_OPEN_ACTION, &Controller::selectFileData },
-											   { FILE_MENU_EXIT_ACTION, &Controller::closeWindow } };
+											   { FILE_MENU_EXIT_ACTION, &Controller::closeWindow },
+											   { READONLY_CHECK_ACTION, &Controller::readOnlyCheckAction },
+											   { HIDDEN_CHECK_ACTION, &Controller::hiddenCheckAction } };
 
 
 Controller::Controller()
@@ -129,6 +131,32 @@ void Controller::viewFileSize(BY_HANDLE_FILE_INFORMATION file)
 	std::string sizeStr = std::to_string(fileSizeManager.getFileSize(file));
 	form.setToLabel(form.getFileSizeLabel(), FILE_SIZE_LABEL + sizeStr
 		+ FILE_SIZE_LABEL_SUFFIX);
+}
+
+
+void Controller::readOnlyCheckAction()
+{
+	if (IsDlgButtonChecked(form.getHWnd(), READONLY_CHECK_ACTION))
+	{
+		CheckDlgButton(form.getHWnd(), READONLY_CHECK_ACTION, BST_UNCHECKED);
+	}
+	else
+	{
+		CheckDlgButton(form.getHWnd(), READONLY_CHECK_ACTION, BST_CHECKED);
+	}
+}
+
+
+void Controller::hiddenCheckAction()
+{
+	if (IsDlgButtonChecked(form.getHWnd(), HIDDEN_CHECK_ACTION))
+	{
+		CheckDlgButton(form.getHWnd(), HIDDEN_CHECK_ACTION, BST_UNCHECKED);
+	}
+	else
+	{
+		CheckDlgButton(form.getHWnd(), HIDDEN_CHECK_ACTION, BST_CHECKED);
+	}
 }
 
 

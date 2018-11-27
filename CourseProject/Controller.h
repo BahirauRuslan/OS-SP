@@ -23,6 +23,10 @@ public:
 	void viewOpenedDateTimeFile(BY_HANDLE_FILE_INFORMATION file);
 	void viewFilePath(std::string path);
 	void viewFileSize(BY_HANDLE_FILE_INFORMATION file);
+	void viewReadOnlyStatus(HANDLE file);
+	void viewHiddenStatus(HANDLE file);
+	void readOnlyCheckAction();
+	void hiddenCheckAction();
 	MainForm getForm();
 	FileDateTimeManager getDateTimeManager();
 	FileSizeManager getFileSizeManager();

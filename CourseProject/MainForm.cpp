@@ -56,6 +56,7 @@ void MainForm::initWindow()
 {
 	addMenus();
 	addLabels();
+	addCheckBoxes();
 }
 
 
@@ -91,6 +92,18 @@ void MainForm::addLabels()
 		WS_VISIBLE | WS_CHILD, DEFAULT_X_POS, FILE_SIZE_LABEL_Y_POS,
 		LABELS_WIDHT, LABELS_HEIGHT, hWnd, NULL, NULL, NULL);
 }
+
+
+void MainForm::addCheckBoxes()
+{
+	readOnlyCBox = CreateWindow("button", READONLY_CBOX, WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
+		DEFAULT_X_POS, READONLY_CBOX_Y_POS, CHECKBOX_WIDTH, 
+		CHECKBOX_HEIGHT, hWnd, (HMENU)READONLY_CHECK_ACTION, NULL, NULL);
+	hiddenCBox = CreateWindow("button", HIDDEN_CBOX, WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
+		HIDDEN_CBOX_X_POS, HIDDEN_CBOX_Y_POS, CHECKBOX_WIDTH,
+		CHECKBOX_HEIGHT, hWnd, (HMENU)HIDDEN_CHECK_ACTION, NULL, NULL);
+}
+
 
 std::string MainForm::getFromLabel(HWND label)
 {
@@ -154,6 +167,18 @@ HWND MainForm::getFileSizeLabel()
 }
 
 
+HWND MainForm::getReadOnlyCBox()
+{
+	return readOnlyCBox;
+}
+
+
+HWND MainForm::getHiddenCBox()
+{
+	return hiddenCBox;
+}
+
+
 void MainForm::setHWnd(HWND hWnd)
 {
 	this->hWnd = hWnd;
@@ -199,4 +224,16 @@ void MainForm::setPathLabel(HWND pathLabel)
 void MainForm::setFileSizeLabel(HWND fileSizeLabel)
 {
 	this->fileSizeLabel = fileSizeLabel;
+}
+
+
+void MainForm::setReadOnlyCBox(HWND readOnlyCBox)
+{
+	this->readOnlyCBox = readOnlyCBox;
+}
+
+
+void MainForm::setHiddenCBox(HWND hiddenCBox)
+{
+	this->hiddenCBox = hiddenCBox;
 }
