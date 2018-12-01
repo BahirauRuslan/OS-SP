@@ -1,5 +1,8 @@
 #include "Controller.h"
 
+std::map<DWORD, DWORD> attributesActionMap = { { FILE_ATTRIBUTE_READONLY, READONLY_CHECK_ACTION },
+											   { FILE_ATTRIBUTE_HIDDEN, HIDDEN_CHECK_ACTION } };
+
 std::map<UINT, events> mainEventMap = { { WM_DESTROY, &Controller::quit },
 										{ WM_COMMAND, &Controller::commandEvents } };
 
@@ -87,15 +90,20 @@ void Controller::quit(WPARAM wParam)
 
 void Controller::selectFileData()
 {
-	std::string ofn = form.selectFile();
-	HANDLE file = FileUtil::getFileUtil()->getFileHandle(ofn);
-	BY_HANDLE_FILE_INFORMATION fileInf 
-		= FileUtil::getFileUtil()->getFileInformation(file);
-	viewCreatedDateTimeFile(fileInf);
-	viewEditedDateTimeFile(fileInf);
-	viewOpenedDateTimeFile(fileInf);
-	viewFilePath(ofn);
-	viewFileSize(fileInf);
+	ofn = form.selectFile();
+	if (ofn != "")
+	{
+		HANDLE file = FileUtil::getFileUtil()->getFileHandle(ofn);
+		BY_HANDLE_FILE_INFORMATION fileInf
+			= FileUtil::getFileUtil()->getFileInformation(file);
+		viewCreatedDateTimeFile(fileInf);
+		viewEditedDateTimeFile(fileInf);
+		viewOpenedDateTimeFile(fileInf);
+		viewFilePath(ofn);
+		viewFileSize(fileInf);
+		viewStatus(fileInf, FILE_ATTRIBUTE_READONLY);
+		viewStatus(fileInf, FILE_ATTRIBUTE_HIDDEN);
+	}
 }
 
 
@@ -134,35 +142,66 @@ void Controller::viewFileSize(BY_HANDLE_FILE_INFORMATION file)
 }
 
 
+void Controller::viewStatus(BY_HANDLE_FILE_INFORMATION file, DWORD attribute)
+{
+	CheckDlgButton(form.getHWnd(), attributesActionMap[attribute],
+		(fileAttributeManager.attributeStatus(file, attribute) 
+			? BST_CHECKED : BST_UNCHECKED));
+}
+
+
 void Controller::readOnlyCheckAction()
 {
-	if (IsDlgButtonChecked(form.getHWnd(), READONLY_CHECK_ACTION))
-	{
-		CheckDlgButton(form.getHWnd(), READONLY_CHECK_ACTION, BST_UNCHECKED);
-	}
-	else
-	{
-		CheckDlgButton(form.getHWnd(), READONLY_CHECK_ACTION, BST_CHECKED);
-	}
+	changeCheckBoxStatus(attributesActionMap[FILE_ATTRIBUTE_READONLY]);
+	changeAttributeStatus(FILE_ATTRIBUTE_READONLY);
 }
 
 
 void Controller::hiddenCheckAction()
 {
-	if (IsDlgButtonChecked(form.getHWnd(), HIDDEN_CHECK_ACTION))
+	changeCheckBoxStatus(attributesActionMap[FILE_ATTRIBUTE_HIDDEN]);
+	changeAttributeStatus(FILE_ATTRIBUTE_HIDDEN);
+}
+
+
+void Controller::changeCheckBoxStatus(DWORD attributeAction)
+{
+	if (IsDlgButtonChecked(form.getHWnd(), attributeAction))
 	{
-		CheckDlgButton(form.getHWnd(), HIDDEN_CHECK_ACTION, BST_UNCHECKED);
+		CheckDlgButton(form.getHWnd(), attributeAction, BST_UNCHECKED);
 	}
 	else
 	{
-		CheckDlgButton(form.getHWnd(), HIDDEN_CHECK_ACTION, BST_CHECKED);
+		CheckDlgButton(form.getHWnd(), attributeAction, BST_CHECKED);
 	}
+}
+
+
+void Controller::changeAttributeStatus(DWORD attribute)
+{
+	if (ofn != "")
+	{
+		fileAttributeManager.setAttributeStatus(ofn, attribute,
+			IsDlgButtonChecked(form.getHWnd(), attributesActionMap[attribute]));
+	}
+}
+
+
+std::string Controller::GetOfn()
+{
+	return ofn;
 }
 
 
 MainForm Controller::getForm()
 {
 	return form;
+}
+
+
+FileAttributeManager Controller::getFileAttributeManager()
+{
+	return fileAttributeManager;
 }
 
 
@@ -178,9 +217,21 @@ FileSizeManager Controller::getFileSizeManager()
 }
 
 
+void Controller::setOfn(std::string ofn)
+{
+	this->ofn = ofn;
+}
+
+
 void Controller::setForm(MainForm form)
 {
 	this->form = form;
+}
+
+
+void Controller::setFileAttributeManager(FileAttributeManager fileAttributeManager)
+{
+	this->fileAttributeManager = fileAttributeManager;
 }
 
 

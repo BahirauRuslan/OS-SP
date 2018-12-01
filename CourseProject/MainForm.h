@@ -43,6 +43,7 @@
 #define FILE_MENU "Файл"
 #define FILE_MENU_OPEN "Открыть"
 #define FILE_MENU_EXIT "Выход"
+
 #define FILE_MENU_OPEN_ACTION 1
 #define FILE_MENU_EXIT_ACTION 3
 #define READONLY_CHECK_ACTION 5
