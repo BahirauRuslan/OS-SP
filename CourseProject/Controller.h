@@ -27,6 +27,10 @@ public:
 	void viewStatus(BY_HANDLE_FILE_INFORMATION file, DWORD attribute);
 	void readOnlyCheckAction();
 	void hiddenCheckAction();
+	void archiveCheckAction();
+	void compressedCheckAction();
+	void encryptedCheckAction();
+	void indexedCheckAction();
 	void changeCheckBoxStatus(DWORD attributeAction);
 	void changeAttributeStatus(DWORD attribute);
 	std::string GetOfn();
@@ -49,4 +53,3 @@ private:
 
 typedef void(Controller::*events)(WPARAM);
 typedef void(Controller::*commEvents)();
-typedef void(Controller::*checkBoxEvent)();

@@ -6,6 +6,6 @@ class FileSizeManager
 public:
 	FileSizeManager();
 	~FileSizeManager();
-	int getFileSize(BY_HANDLE_FILE_INFORMATION file);
+	long getFileSize(BY_HANDLE_FILE_INFORMATION file);
 };
 

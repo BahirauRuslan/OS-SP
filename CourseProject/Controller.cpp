@@ -1,7 +1,11 @@
 #include "Controller.h"
 
 std::map<DWORD, DWORD> attributesActionMap = { { FILE_ATTRIBUTE_READONLY, READONLY_CHECK_ACTION },
-											   { FILE_ATTRIBUTE_HIDDEN, HIDDEN_CHECK_ACTION } };
+											   { FILE_ATTRIBUTE_HIDDEN, HIDDEN_CHECK_ACTION },
+											   { FILE_ATTRIBUTE_ARCHIVE, ARCHIVE_CHECK_ACTION },
+											   { FILE_ATTRIBUTE_COMPRESSED, COMPRESSED_CHECK_ACTION },
+											   { FILE_ATTRIBUTE_ENCRYPTED, ENCRYPTED_CHECK_ACTION},
+											   { FILE_ATTRIBUTE_NOT_CONTENT_INDEXED, INDEXED_CHECK_ACTION } };
 
 std::map<UINT, events> mainEventMap = { { WM_DESTROY, &Controller::quit },
 										{ WM_COMMAND, &Controller::commandEvents } };
@@ -9,7 +13,11 @@ std::map<UINT, events> mainEventMap = { { WM_DESTROY, &Controller::quit },
 std::map<UINT, commEvents> commandEventMap = { { FILE_MENU_OPEN_ACTION, &Controller::selectFileData },
 											   { FILE_MENU_EXIT_ACTION, &Controller::closeWindow },
 											   { READONLY_CHECK_ACTION, &Controller::readOnlyCheckAction },
-											   { HIDDEN_CHECK_ACTION, &Controller::hiddenCheckAction } };
+											   { HIDDEN_CHECK_ACTION, &Controller::hiddenCheckAction },
+											   { ARCHIVE_CHECK_ACTION, &Controller::archiveCheckAction },
+											   { COMPRESSED_CHECK_ACTION, &Controller::compressedCheckAction },
+											   { ENCRYPTED_CHECK_ACTION, &Controller::encryptedCheckAction },
+											   { INDEXED_CHECK_ACTION, &Controller::indexedCheckAction } };
 
 
 Controller::Controller()
@@ -96,6 +104,7 @@ void Controller::selectFileData()
 		HANDLE file = FileUtil::getFileUtil()->getFileHandle(ofn);
 		BY_HANDLE_FILE_INFORMATION fileInf
 			= FileUtil::getFileUtil()->getFileInformation(file);
+		CloseHandle(file);
 		viewCreatedDateTimeFile(fileInf);
 		viewEditedDateTimeFile(fileInf);
 		viewOpenedDateTimeFile(fileInf);
@@ -103,6 +112,10 @@ void Controller::selectFileData()
 		viewFileSize(fileInf);
 		viewStatus(fileInf, FILE_ATTRIBUTE_READONLY);
 		viewStatus(fileInf, FILE_ATTRIBUTE_HIDDEN);
+		viewStatus(fileInf, FILE_ATTRIBUTE_ARCHIVE);
+		viewStatus(fileInf, FILE_ATTRIBUTE_COMPRESSED);
+		viewStatus(fileInf, FILE_ATTRIBUTE_ENCRYPTED);
+		viewStatus(fileInf, FILE_ATTRIBUTE_NOT_CONTENT_INDEXED);
 	}
 }
 
@@ -161,6 +174,45 @@ void Controller::hiddenCheckAction()
 {
 	changeCheckBoxStatus(attributesActionMap[FILE_ATTRIBUTE_HIDDEN]);
 	changeAttributeStatus(FILE_ATTRIBUTE_HIDDEN);
+}
+
+
+void Controller::archiveCheckAction()
+{
+	changeCheckBoxStatus(attributesActionMap[FILE_ATTRIBUTE_ARCHIVE]);
+	changeAttributeStatus(FILE_ATTRIBUTE_ARCHIVE);
+}
+
+
+void Controller::compressedCheckAction()
+{
+	changeCheckBoxStatus(attributesActionMap[FILE_ATTRIBUTE_COMPRESSED]);
+	if (ofn != "")
+	{
+		HANDLE file = FileUtil::getFileUtil()->getFileHandleForCompression(ofn);
+		fileAttributeManager.setCompressedStatus(file,
+			IsDlgButtonChecked(form.getHWnd(), COMPRESSED_CHECK_ACTION));
+		CloseHandle(file);
+	}
+}
+
+
+void Controller::encryptedCheckAction()
+{
+	changeCheckBoxStatus(attributesActionMap[FILE_ATTRIBUTE_ENCRYPTED]);
+	//changeAttributeStatus(FILE_ATTRIBUTE_ENCRYPTED);
+	if (ofn != "")
+	{
+		fileAttributeManager.setEncryptedStatus(ofn, 
+			IsDlgButtonChecked(form.getHWnd(), ENCRYPTED_CHECK_ACTION));
+	}
+}
+
+
+void Controller::indexedCheckAction()
+{
+	changeCheckBoxStatus(attributesActionMap[FILE_ATTRIBUTE_NOT_CONTENT_INDEXED]);
+	changeAttributeStatus(FILE_ATTRIBUTE_NOT_CONTENT_INDEXED);
 }
 
 

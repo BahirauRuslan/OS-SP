@@ -102,6 +102,19 @@ void MainForm::addCheckBoxes()
 	hiddenCBox = CreateWindow("button", HIDDEN_CBOX, WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
 		HIDDEN_CBOX_X_POS, HIDDEN_CBOX_Y_POS, CHECKBOX_WIDTH,
 		CHECKBOX_HEIGHT, hWnd, (HMENU)HIDDEN_CHECK_ACTION, NULL, NULL);
+	archiveCBox = CreateWindow("button", ARCHIVE_CBOX, WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
+		ARCHIVE_CBOX_X_POS, ARCHIVE_CBOX_Y_POS, CHECKBOX_WIDTH,
+		CHECKBOX_HEIGHT, hWnd, (HMENU)ARCHIVE_CHECK_ACTION, NULL, NULL);
+	compressedCBox = CreateWindow("button", COMPRESSED_CBOX, WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
+		DEFAULT_X_POS, COMPRESSED_CBOX_Y_POS, CHECKBOX_WIDTH,
+		CHECKBOX_HEIGHT, hWnd, (HMENU)COMPRESSED_CHECK_ACTION, NULL, NULL);
+	encryptedCBox = CreateWindow("button", ENCRYPTED_CBOX, WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
+		DEFAULT_X_POS, ENCRYPTED_CBOX_Y_POS, CHECKBOX_WIDTH,
+		CHECKBOX_HEIGHT, hWnd, (HMENU)ENCRYPTED_CHECK_ACTION, NULL, NULL);
+	//EnableWindow(encryptedCBox, false);
+	indexedCBox = CreateWindow("button", INDEXED_CBOX, WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
+		DEFAULT_X_POS, INDEXED_CBOX_Y_POS, CHECKBOX_WIDTH,
+		CHECKBOX_HEIGHT, hWnd, (HMENU)INDEXED_CHECK_ACTION, NULL, NULL);
 }
 
 
@@ -179,6 +192,30 @@ HWND MainForm::getHiddenCBox()
 }
 
 
+HWND MainForm::getArchiveCBox()
+{
+	return archiveCBox;
+}
+
+
+HWND MainForm::getCompressedCBox()
+{
+	return compressedCBox;
+}
+
+
+HWND MainForm::getEncryptedCBox()
+{
+	return encryptedCBox;
+}
+
+
+HWND MainForm::getIndexedCBox()
+{
+	return indexedCBox;
+}
+
+
 void MainForm::setHWnd(HWND hWnd)
 {
 	this->hWnd = hWnd;
@@ -236,4 +273,28 @@ void MainForm::setReadOnlyCBox(HWND readOnlyCBox)
 void MainForm::setHiddenCBox(HWND hiddenCBox)
 {
 	this->hiddenCBox = hiddenCBox;
+}
+
+
+void MainForm::setArchiveCBox(HWND archiveCBox)
+{
+	this->archiveCBox = archiveCBox;
+}
+
+
+void MainForm::setCompressedCBox(HWND compressedCBox)
+{
+	this->compressedCBox = compressedCBox;
+}
+
+
+void MainForm::setEncryptedCBox(HWND encryptedCBox)
+{
+	this->encryptedCBox = encryptedCBox;
+}
+
+
+void MainForm::setIndexedCBox(HWND indexedCBox)
+{
+	this->indexedCBox = indexedCBox;
 }
