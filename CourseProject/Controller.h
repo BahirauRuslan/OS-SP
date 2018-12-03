@@ -5,6 +5,7 @@
 #include "FileDateTimeManager.h";
 #include "FileSizeManager.h";
 #include "FileUtil.h";
+#include "FileTypeManager.h";
 
 class Controller
 {
@@ -25,6 +26,8 @@ public:
 	void viewFilePath(std::string path);
 	void viewFileSize(BY_HANDLE_FILE_INFORMATION file);
 	void viewStatus(BY_HANDLE_FILE_INFORMATION file, DWORD attribute);
+	void viewIcon();
+	void viewFileType();
 	void readOnlyCheckAction();
 	void hiddenCheckAction();
 	void archiveCheckAction();
@@ -33,22 +36,27 @@ public:
 	void indexedCheckAction();
 	void changeCheckBoxStatus(DWORD attributeAction);
 	void changeAttributeStatus(DWORD attribute);
+	void changeCompressedStatus();
+	void changeEncryptedStatus();
 	std::string GetOfn();
 	MainForm getForm();
 	FileAttributeManager getFileAttributeManager();
 	FileDateTimeManager getDateTimeManager();
 	FileSizeManager getFileSizeManager();
+	FileTypeManager getFileTypeManager();
 	void setOfn(std::string ofn);
 	void setForm(MainForm form);
 	void setFileAttributeManager(FileAttributeManager fileAttributeManager);
 	void setDateTimeManager(FileDateTimeManager dateTimeManager);
 	void setFileSizeManager(FileSizeManager fileSizeManager);
+	void setFileTypeManager(FileTypeManager fileTypeManager);
 private:
 	std::string ofn;
 	MainForm form;
 	FileAttributeManager fileAttributeManager;
 	FileDateTimeManager dateTimeManager;
 	FileSizeManager fileSizeManager;
+	FileTypeManager fileTypeManager;
 };
 
 typedef void(Controller::*events)(WPARAM);

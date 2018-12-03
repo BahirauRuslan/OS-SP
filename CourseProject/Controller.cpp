@@ -116,6 +116,13 @@ void Controller::selectFileData()
 		viewStatus(fileInf, FILE_ATTRIBUTE_COMPRESSED);
 		viewStatus(fileInf, FILE_ATTRIBUTE_ENCRYPTED);
 		viewStatus(fileInf, FILE_ATTRIBUTE_NOT_CONTENT_INDEXED);
+		/*
+		SHFILEINFO flInfo;
+		SHGetFileInfo(ofn.c_str(), 0, &flInfo, sizeof(flInfo), SHGFI_ICON | SHGFI_TYPENAME);
+		MessageBox(NULL, flInfo.szTypeName, "Error", MB_OK);
+		form.addPicture((HICON)flInfo.hIcon);*/
+		viewIcon();
+		viewFileType();
 	}
 }
 
@@ -163,6 +170,19 @@ void Controller::viewStatus(BY_HANDLE_FILE_INFORMATION file, DWORD attribute)
 }
 
 
+void Controller::viewIcon()
+{
+	form.addPicture(fileTypeManager.getIcon(ofn));
+}
+
+
+void Controller::viewFileType()
+{
+	form.setToLabel(form.getFileTypeLabel(), 
+		FILE_TYPE_LABEL + fileTypeManager.getFileType(ofn));
+}
+
+
 void Controller::readOnlyCheckAction()
 {
 	changeCheckBoxStatus(attributesActionMap[FILE_ATTRIBUTE_READONLY]);
@@ -186,26 +206,15 @@ void Controller::archiveCheckAction()
 
 void Controller::compressedCheckAction()
 {
+	changeCompressedStatus();
 	changeCheckBoxStatus(attributesActionMap[FILE_ATTRIBUTE_COMPRESSED]);
-	if (ofn != "")
-	{
-		HANDLE file = FileUtil::getFileUtil()->getFileHandleForCompression(ofn);
-		fileAttributeManager.setCompressedStatus(file,
-			IsDlgButtonChecked(form.getHWnd(), COMPRESSED_CHECK_ACTION));
-		CloseHandle(file);
-	}
 }
 
 
 void Controller::encryptedCheckAction()
 {
+	changeEncryptedStatus();
 	changeCheckBoxStatus(attributesActionMap[FILE_ATTRIBUTE_ENCRYPTED]);
-	//changeAttributeStatus(FILE_ATTRIBUTE_ENCRYPTED);
-	if (ofn != "")
-	{
-		fileAttributeManager.setEncryptedStatus(ofn, 
-			IsDlgButtonChecked(form.getHWnd(), ENCRYPTED_CHECK_ACTION));
-	}
 }
 
 
@@ -235,6 +244,38 @@ void Controller::changeAttributeStatus(DWORD attribute)
 	{
 		fileAttributeManager.setAttributeStatus(ofn, attribute,
 			IsDlgButtonChecked(form.getHWnd(), attributesActionMap[attribute]));
+	}
+}
+
+
+void  Controller::changeCompressedStatus()
+{
+	if (ofn != "")
+	{
+		if (!IsDlgButtonChecked(form.getHWnd(), attributesActionMap[FILE_ATTRIBUTE_COMPRESSED])
+			&& IsDlgButtonChecked(form.getHWnd(), attributesActionMap[FILE_ATTRIBUTE_ENCRYPTED]))
+		{
+			encryptedCheckAction();
+		}
+		HANDLE file = FileUtil::getFileUtil()->getFileHandleForCompression(ofn);
+		fileAttributeManager.setCompressedStatus(file,
+			!IsDlgButtonChecked(form.getHWnd(), COMPRESSED_CHECK_ACTION));
+		CloseHandle(file);
+	}
+}
+
+
+void Controller::changeEncryptedStatus()
+{
+	if (ofn != "")
+	{
+		if (!IsDlgButtonChecked(form.getHWnd(), attributesActionMap[FILE_ATTRIBUTE_ENCRYPTED])
+			&& IsDlgButtonChecked(form.getHWnd(), attributesActionMap[FILE_ATTRIBUTE_COMPRESSED]))
+		{
+			compressedCheckAction();
+		}
+		fileAttributeManager.setEncryptedStatus(ofn,
+			!IsDlgButtonChecked(form.getHWnd(), ENCRYPTED_CHECK_ACTION));
 	}
 }
 
@@ -269,6 +310,12 @@ FileSizeManager Controller::getFileSizeManager()
 }
 
 
+FileTypeManager Controller::getFileTypeManager()
+{
+	return fileTypeManager;
+}
+
+
 void Controller::setOfn(std::string ofn)
 {
 	this->ofn = ofn;
@@ -296,4 +343,10 @@ void Controller::setDateTimeManager(FileDateTimeManager dateTimeManager)
 void Controller::setFileSizeManager(FileSizeManager fileSizeManager)
 {
 	this->fileSizeManager = fileSizeManager;
+}
+
+
+void Controller::setFileTypeManager(FileTypeManager fileTypeManager)
+{
+	this->fileTypeManager = fileTypeManager;
 }

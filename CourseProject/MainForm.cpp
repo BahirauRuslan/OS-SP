@@ -91,6 +91,9 @@ void MainForm::addLabels()
 	fileSizeLabel = CreateWindow("static", FILE_SIZE_LABEL,
 		WS_VISIBLE | WS_CHILD, DEFAULT_X_POS, FILE_SIZE_LABEL_Y_POS,
 		LABELS_WIDHT, LABELS_HEIGHT, hWnd, NULL, NULL, NULL);
+	fileTypeLabel = CreateWindow("static", FILE_TYPE_LABEL,
+		WS_VISIBLE | WS_CHILD, FILE_TYPE_LABEL_X_POS, FILE_TYPE_LABEL_Y_POS,
+		LABELS_WIDHT, LABELS_HEIGHT, hWnd, NULL, NULL, NULL);
 }
 
 
@@ -115,6 +118,27 @@ void MainForm::addCheckBoxes()
 	indexedCBox = CreateWindow("button", INDEXED_CBOX, WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
 		DEFAULT_X_POS, INDEXED_CBOX_Y_POS, CHECKBOX_WIDTH,
 		CHECKBOX_HEIGHT, hWnd, (HMENU)INDEXED_CHECK_ACTION, NULL, NULL);
+}
+
+
+void MainForm::addPicture(HICON bitmap1)
+{
+	PAINTSTRUCT ps;
+	ICONINFO inf;
+	GetIconInfo(bitmap1, &inf);
+	BITMAP bm;
+	HBITMAP bitmap = inf.hbmColor;
+	GetObject(bitmap, sizeof(bm), &bm);
+	picture = CreateWindow("static", INDEXED_CBOX, WS_VISIBLE | WS_CHILD | SS_BITMAP,
+		PIC_X_POS, DEFAULT_Y_LAYOUT, bm.bmWidth,
+		bm.bmHeight, hWnd, NULL, NULL, NULL);
+	HDC hdc = GetDC(picture);
+	HDC memBit = CreateCompatibleDC(hdc);
+	SelectObject(memBit, bitmap);
+	ReleaseDC(picture, hdc);
+	hdc = BeginPaint(picture, &ps);
+	BitBlt(hdc, 0, 0, bm.bmWidth, bm.bmHeight, memBit, 0, 0, SRCCOPY);
+	EndPaint(picture, &ps);
 }
 
 
@@ -180,6 +204,12 @@ HWND MainForm::getFileSizeLabel()
 }
 
 
+HWND MainForm::getFileTypeLabel()
+{
+	return fileTypeLabel;
+}
+
+
 HWND MainForm::getReadOnlyCBox()
 {
 	return readOnlyCBox;
@@ -213,6 +243,12 @@ HWND MainForm::getEncryptedCBox()
 HWND MainForm::getIndexedCBox()
 {
 	return indexedCBox;
+}
+
+
+HWND MainForm::getPicture()
+{
+	return picture;
 }
 
 
@@ -264,6 +300,12 @@ void MainForm::setFileSizeLabel(HWND fileSizeLabel)
 }
 
 
+void MainForm::setFileTypeLabel(HWND fileTypeLabel)
+{
+	this->fileTypeLabel = fileTypeLabel;
+}
+
+
 void MainForm::setReadOnlyCBox(HWND readOnlyCBox)
 {
 	this->readOnlyCBox = readOnlyCBox;
@@ -297,4 +339,10 @@ void MainForm::setEncryptedCBox(HWND encryptedCBox)
 void MainForm::setIndexedCBox(HWND indexedCBox)
 {
 	this->indexedCBox = indexedCBox;
+}
+
+
+void MainForm::setPicture(HWND picture)
+{
+	this->picture = picture;
 }
