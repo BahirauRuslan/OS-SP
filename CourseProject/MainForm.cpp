@@ -114,10 +114,21 @@ void MainForm::addCheckBoxes()
 	encryptedCBox = CreateWindow("button", ENCRYPTED_CBOX, WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
 		DEFAULT_X_POS, ENCRYPTED_CBOX_Y_POS, CHECKBOX_WIDTH,
 		CHECKBOX_HEIGHT, hWnd, (HMENU)ENCRYPTED_CHECK_ACTION, NULL, NULL);
-	//EnableWindow(encryptedCBox, false);
 	indexedCBox = CreateWindow("button", INDEXED_CBOX, WS_VISIBLE | WS_CHILD | BS_CHECKBOX,
 		DEFAULT_X_POS, INDEXED_CBOX_Y_POS, CHECKBOX_WIDTH,
 		CHECKBOX_HEIGHT, hWnd, (HMENU)INDEXED_CHECK_ACTION, NULL, NULL);
+	setAllCheckBoxEnableStatus(false);
+}
+
+
+void MainForm::setAllCheckBoxEnableStatus(bool status)
+{
+	EnableWindow(readOnlyCBox, status);
+	EnableWindow(hiddenCBox, status);
+	EnableWindow(archiveCBox, status);
+	EnableWindow(compressedCBox, status);
+	EnableWindow(encryptedCBox, status);
+	EnableWindow(indexedCBox, status);
 }
 
 

@@ -43,11 +43,6 @@ void FileAttributeManager::setCompressedStatus(HANDLE file, bool status)
 void FileAttributeManager::setEncryptedStatus(std::string fileName, bool status)
 {
 	(status) ? EncryptFile(fileName.c_str()) : DecryptFile(fileName.c_str(), 0);
-	/*
-	if (!((status) ? EncryptFile(fileName.c_str()) : DecryptFile(fileName.c_str(), 0)))
-	{
-		MessageBox(NULL, std::to_string(GetLastError()).c_str(), "Error", MB_OK);
-	}*/
 }
 
 

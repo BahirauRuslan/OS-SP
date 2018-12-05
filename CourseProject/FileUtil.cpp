@@ -29,7 +29,7 @@ BY_HANDLE_FILE_INFORMATION FileUtil::getFileInformation(HANDLE file)
 }
 
 
-HANDLE FileUtil::getFileHandleForCompression(std::string fileName)	////////////////////////////////////////
+HANDLE FileUtil::getFileHandleForCompression(std::string fileName)
 {
 	return CreateFile((LPCSTR)fileName.c_str(), GENERIC_READ | GENERIC_WRITE, NULL,
 		NULL, OPEN_EXISTING, NULL, NULL);

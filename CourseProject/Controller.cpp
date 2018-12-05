@@ -98,9 +98,10 @@ void Controller::quit(WPARAM wParam)
 
 void Controller::selectFileData()
 {
-	ofn = form.selectFile();
-	if (ofn != "")
+	std::string fileName = form.selectFile();
+	if (fileName != "")
 	{
+		ofn = fileName;
 		HANDLE file = FileUtil::getFileUtil()->getFileHandle(ofn);
 		BY_HANDLE_FILE_INFORMATION fileInf
 			= FileUtil::getFileUtil()->getFileInformation(file);
@@ -116,11 +117,7 @@ void Controller::selectFileData()
 		viewStatus(fileInf, FILE_ATTRIBUTE_COMPRESSED);
 		viewStatus(fileInf, FILE_ATTRIBUTE_ENCRYPTED);
 		viewStatus(fileInf, FILE_ATTRIBUTE_NOT_CONTENT_INDEXED);
-		/*
-		SHFILEINFO flInfo;
-		SHGetFileInfo(ofn.c_str(), 0, &flInfo, sizeof(flInfo), SHGFI_ICON | SHGFI_TYPENAME);
-		MessageBox(NULL, flInfo.szTypeName, "Error", MB_OK);
-		form.addPicture((HICON)flInfo.hIcon);*/
+		form.setAllCheckBoxEnableStatus(true);
 		viewIcon();
 		viewFileType();
 	}

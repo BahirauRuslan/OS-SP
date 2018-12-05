@@ -12,7 +12,7 @@
 #define MAIN_X_POS 100
 #define MAIN_Y_POS 100
 #define MAIN_WIDTH 700
-#define MAIN_HEIGHT 450
+#define MAIN_HEIGHT 380
 
 #define PIC_X_POS 410
 #define PIC_SIZE 32
@@ -85,6 +85,7 @@ public:
 	void addLabels();
 	void addCheckBoxes();
 	void addPicture(HICON bitmap);
+	void setAllCheckBoxEnableStatus(bool status);
 	HWND getHWnd();
 	HMENU getMainMenu();
 	HMENU getFileMenu();
